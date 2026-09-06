@@ -1,0 +1,43 @@
+# Environnements Python
+.venv/
+venv/
+env/
+
+# Cache et fichiers compilés Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Base vectorielle locale
+chroma_db/
+
+# Fichiers temporaires et téléversés
+temp_uploads/
+uploads/
+*.tmp
+
+# Variables et secrets
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# Tests et outils Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+coverage.xml
+.coverage
+htmlcov/
+
+# Journaux
+*.log
+
+# Éditeurs
+.idea/
+.vscode/
+*.swp
+
+# Systèmes d'exploitation
+.DS_Store
+Thumbs.db
