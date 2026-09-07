@@ -12,7 +12,7 @@ from configuration import tailleChunk
 from ressources import obtenirBaseVectorielle
 
 
-def chargerDocument(cheminFichier: Path, nomSource: str) -> list[Document]:
+def loadFiles(cheminFichier: Path, nomSource: str) -> list[Document]:
     extension = cheminFichier.suffix.lower()
 
     if extension == ".pdf":
@@ -48,7 +48,7 @@ def chargerDocument(cheminFichier: Path, nomSource: str) -> list[Document]:
     return documentsValides
 
 
-def chargerFichiersTeleverses(fichiersTeleverses):
+def loadUploadedFiles(fichiersTeleverses):
     documents = []
     erreurs = []
     sourcesChargees = []
@@ -70,7 +70,7 @@ def chargerFichiersTeleverses(fichiersTeleverses):
                 cheminFichier = cheminTemporaire / nomTemporaire
                 cheminFichier.write_bytes(fichierTeleverse.getvalue())
 
-                documentsFichier = chargerDocument(cheminFichier, nomSource)
+                documentsFichier = loadFiles(cheminFichier, nomSource)
                 documents.extend(documentsFichier)
                 sourcesChargees.append(nomSource)
             except Exception as erreur:
@@ -80,7 +80,7 @@ def chargerFichiersTeleverses(fichiersTeleverses):
     return documents, sourcesChargees, erreurs
 
 
-def decouperDocuments(documents: list[Document]) -> list[Document]:
+def splitFiles(documents: list[Document]) -> list[Document]:
     separations = ["\n\n", "\n", ". ", " ", ""]
 
     decoupeur = RecursiveCharacterTextSplitter(
@@ -103,7 +103,7 @@ def indexerFichiers(fichiersTeleverses):
     if not fichiersTeleverses:
         raise ValueError("Sélectionnez au moins un fichier avant l'indexation.")
 
-    resultatChargement = chargerFichiersTeleverses(fichiersTeleverses)
+    resultatChargement = loadUploadedFiles(fichiersTeleverses)
     documents = resultatChargement[0]
     sourcesChargees = resultatChargement[1]
     erreurs = resultatChargement[2]
@@ -116,7 +116,7 @@ def indexerFichiers(fichiersTeleverses):
 
         raise ValueError(details)
 
-    chunks = decouperDocuments(documents)
+    chunks = splitFiles(documents)
 
     if not chunks:
         raise ValueError("Aucun chunk n'a pu être créé.")
